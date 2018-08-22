@@ -476,7 +476,12 @@ public class AddressBook {
      * @return set of keywords as specified by args
      */
     private static Set<String> extractKeywordsFromFindPersonArgs(String findPersonCommandArgs) {
-        return new HashSet<>(splitByWhitespace(findPersonCommandArgs.trim()));
+        Set<String> keywords = new HashSet<>(splitByWhitespace(findPersonCommandArgs.trim()));
+        Set<String> lowerCaseKeywords = new HashSet<>();
+        for (String keyword : keywords) {
+            lowerCaseKeywords.add(keyword.toLowerCase());
+        }
+        return lowerCaseKeywords;
     }
 
     /**
@@ -490,7 +495,11 @@ public class AddressBook {
         final ArrayList<HashMap<PersonProperty,String>> matchedPersons = new ArrayList<>();
         for (HashMap<PersonProperty,String> person : getAllPersonsInAddressBook()) {
             final Set<String> wordsInName = new HashSet<>(splitByWhitespace(getNameFromPerson(person)));
-            if (!Collections.disjoint(wordsInName, keywords)) {
+            final Set<String> lowerCaseWordsInName = new HashSet<>();
+            for (String words : wordsInName) {
+                lowerCaseWordsInName.add(words.toLowerCase());
+            }
+            if (!Collections.disjoint(lowerCaseWordsInName, keywords)) {
                 matchedPersons.add(person);
             }
         }
